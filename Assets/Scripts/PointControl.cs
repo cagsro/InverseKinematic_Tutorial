@@ -18,6 +18,6 @@ public class PointControl : MonoBehaviour
     }
     private void OnMouseUp()
     {
-        this.transform.position = myLimbTransform.transform.position;
+        this.transform.position = new Vector3(myLimbTransform.transform.position.x, myLimbTransform.transform.position.y,this.transform.position.z);
     }
 }
