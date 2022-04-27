@@ -2,16 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class Drag : MonoBehaviour
 {
     private Vector3 mOffset;
     private float mZCoord;
     public Transform myLimbTransform;
-    public float pos;
+    private Vector3 initPos;
 
     void OnMouseDown()
     {
-        pos = this.transform.localPosition.z;
+        initPos = transform.localPosition;
         mZCoord = Camera.main.WorldToScreenPoint(gameObject.transform.position).z;
         //Debug.Log("Konum" + mZCoord);
         mOffset = gameObject.transform.position - GetMouseAsWorldPoint();
@@ -26,13 +27,14 @@ public class Drag : MonoBehaviour
 
     void OnMouseDrag()
     {
-        transform.position = GetMouseAsWorldPoint() + mOffset;
+        Vector3 temp = transform.localPosition;
+        temp = GetMouseAsWorldPoint() + mOffset;
+        temp.z = initPos.z;
+        transform.localPosition = temp;
     }
     private void OnMouseUp()
     {
-        this.transform.localPosition = new Vector3(myLimbTransform.transform.position.x, myLimbTransform.transform.position.y, pos);
+        if (Vector3.Distance(transform.localPosition, initPos) < 0.02f) return;
+        this.transform.position = new Vector3(myLimbTransform.transform.position.x, myLimbTransform.transform.position.y, transform.position.z);
     }
-
-
-
 }

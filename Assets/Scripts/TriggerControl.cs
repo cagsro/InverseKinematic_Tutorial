@@ -17,9 +17,11 @@ public class TriggerControl : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag=="Levels")
+        if (other.gameObject.tag == "Levels")
         {
             Debug.Log("" + this.gameObject.name);
+            IKControl.instance.RagdollEnabled(true);
         }
+
     }
 }

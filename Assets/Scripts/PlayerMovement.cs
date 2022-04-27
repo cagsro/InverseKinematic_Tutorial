@@ -2,13 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Levels : MonoBehaviour
+public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField] float speed;
+    //public static Levels instance;
+    public float speed;
     // Start is called before the first frame update
     void Start()
     {
-        speed = 5;
+        //instance = this;
     }
 
     // Update is called once per frame

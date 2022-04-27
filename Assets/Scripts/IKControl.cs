@@ -4,14 +4,27 @@ using UnityEngine;
 
 public class IKControl : MonoBehaviour
 {
-    Animator animator;
-    public GameObject Player;
+    public static IKControl instance;
+    [Range(1,100)]
+    public int value;
     public Transform LeftHandCanvasUI;
     public Transform TargetRightHand;
     public Transform TargetLeftFoot;
     public Transform TargetRightFoot;
-    //[SerializeField] float speed;
 
+    [SerializeField] PlayerMovement playerParent;
+
+    [Header("Ragdoll Systems")]
+    [SerializeField] Collider[] ragdollColl;
+    [SerializeField] Rigidbody[] ragdollrb;
+
+    private Rigidbody rb;
+    private Animator animator;
+    //[SerializeField] float speed;
+    private void Awake()
+    {
+        instance = this;
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -27,12 +40,6 @@ public class IKControl : MonoBehaviour
     }
     private void OnAnimatorIK(int layerIndex)
     {
-        if (Player==null)
-        {
-            return;
-        }
-        else
-        {
             //Left Hand IK Control
             animator.SetIKPositionWeight(AvatarIKGoal.LeftHand, 1);
             animator.SetIKPosition(AvatarIKGoal.LeftHand, LeftHandCanvasUI.position);
@@ -53,7 +60,28 @@ public class IKControl : MonoBehaviour
             animator.SetIKPosition(AvatarIKGoal.RightFoot, TargetRightFoot.position);
             animator.SetIKRotationWeight(AvatarIKGoal.RightFoot, 1);
             animator.SetIKRotation(AvatarIKGoal.RightFoot, TargetRightFoot.rotation);
-        }
+    }
 
+    private void Physics(bool value)
+    {
+        foreach (Rigidbody childrensPhysics in ragdollrb)
+        {
+            childrensPhysics.isKinematic = !value;
+            childrensPhysics.useGravity = value;
+        }
+    }
+    private void Collider(bool value)
+    {
+        foreach (Collider childrensPhysics in ragdollColl)
+        {
+            childrensPhysics.isTrigger = value;
+        }
+    }
+    public void RagdollEnabled(bool value)
+    {
+        Physics(value);
+        Collider(!value);
+        animator.enabled = !value;
+        playerParent.speed = 0;
     }
 }
